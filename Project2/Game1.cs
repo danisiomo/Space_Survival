@@ -54,14 +54,14 @@ namespace Project2
             _model.HeartTexture = Content.Load<Texture2D>("heart");
 
 
-            // Загружаем текстуру стартового экрана (создайте start_screen.png в Content)
+            
             try
             {
                 _model.StartScreenTexture = Content.Load<Texture2D>("start_screen");
             }
             catch
             {
-                // Если текстуры нет, создадим программно
+                // Если текстуры нет, создаем программно
                 _model.StartScreenTexture = new Texture2D(GraphicsDevice, 1, 1);
                 _model.StartScreenTexture.SetData(new[] { Color.Black });
             }

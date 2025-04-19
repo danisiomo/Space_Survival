@@ -12,7 +12,7 @@ namespace Project2
             get => _position;
             set => _position = value;
         }
-        public float Speed { get; set; } = 3f; // Теперь свойство можно изменять
+        public float Speed { get; set; } = 3f; 
         public List<PirateBullet> Bullets { get; } = new();
         public Rectangle Bounds => new((int)_position.X, (int)_position.Y, 60, 40);
         public float ShootCooldown { get; set; }

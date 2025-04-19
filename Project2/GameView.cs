@@ -135,12 +135,12 @@ namespace Project2
                         _spriteBatch.Draw(
                             _model.PirateBulletTexture,
                             bullet.Bounds,
-                            Color.Red // Красные пули для отличия
+                            Color.Red // Красные пули
                         );
                     }
                 }
 
-                // HUD (без кислорода)
+                // HUD
                 _spriteBatch.DrawString(
                     _model.Font,
                     $"Fuel: {(int)_model.Fuel}%  Score: {_model.Score}",
@@ -201,10 +201,10 @@ namespace Project2
                         Color.Black * 0.5f // Полупрозрачное затемнение
                     );
 
-                    // 2. Текст "PAUSED" с эффектом пульсации
-                    string pauseText = "PAUSED";
+                    // 2. Текст с эффектом пульсации
+                    string pauseText = "PAUSE";
                     Vector2 textSize = _model.Font.MeasureString(pauseText);
-                    // Увеличиваем размер в 2 раза (базовый масштаб)
+                    // Увеличиваем размер в 2 раза 
                     float baseScale = 2.0f;
                     // Добавляем легкую пульсацию (опционально)
                     float pulseScale = 0.1f * (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * 5);
@@ -215,7 +215,7 @@ namespace Project2
                         _model.ScreenWidth / 2 - (textSize.X * totalScale) / 2,
                         _model.ScreenHeight / 3 - (textSize.Y * totalScale) / 2  // 1/3 высоты вместо центра
                     );
-                    // Мерцание с частотой 2Hz (2 раза в секунду)
+                    // Мерцание 
                     float blink = 0.7f + 0.3f * (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * 5);
 
                     _spriteBatch.DrawString(

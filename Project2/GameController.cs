@@ -123,7 +123,7 @@ namespace Project2
                 return; // Не обновляем игру, пока не начата
             }
 
-            // Обработка паузы по пробелу (с защитой от залипания)
+            // Обработка паузы по пробелу
             if (keyboardState.IsKeyDown(Keys.Space) && !_wasSpacePressed)
             {
                 _model.IsPaused = !_model.IsPaused;
@@ -152,7 +152,7 @@ namespace Project2
             UpdateResources();
             CheckCollisions();
 
-            // В GameController.Update():
+            
             if (_model.IsHit)
             {
                 _model.HitCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
