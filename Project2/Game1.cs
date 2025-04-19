@@ -51,7 +51,22 @@ namespace Project2
             _model.PirateTexture = Content.Load<Texture2D>("piratik");
             _model.PirateBulletTexture = Content.Load<Texture2D>("pirate_bull");
 
-            _model.HeartTexture = Content.Load<Texture2D>("heart"); 
+            _model.HeartTexture = Content.Load<Texture2D>("heart");
+
+
+            // Загружаем текстуру стартового экрана (создайте start_screen.png в Content)
+            try
+            {
+                _model.StartScreenTexture = Content.Load<Texture2D>("start_screen");
+            }
+            catch
+            {
+                // Если текстуры нет, создадим программно
+                _model.StartScreenTexture = new Texture2D(GraphicsDevice, 1, 1);
+                _model.StartScreenTexture.SetData(new[] { Color.Black });
+            }
+
+            _view = new GameView(_model, _spriteBatch);
         }
 
         protected override void Update(GameTime gameTime)

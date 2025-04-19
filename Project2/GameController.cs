@@ -111,6 +111,17 @@ namespace Project2
         public void Update(GameTime gameTime)
         {
             var keyboardState = Keyboard.GetState();
+            var mouseState = Mouse.GetState();
+
+            // Если игра еще не начата
+            if (!_model.IsGameStarted)
+            {
+                if (keyboardState.IsKeyDown(Keys.Space) || mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    _model.IsGameStarted = true;
+                }
+                return; // Не обновляем игру, пока не начата
+            }
 
             // Обработка паузы по пробелу (с защитой от залипания)
             if (keyboardState.IsKeyDown(Keys.Space) && !_wasSpacePressed)

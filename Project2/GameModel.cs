@@ -108,5 +108,8 @@ namespace Project2
 
         public bool IsPaused { get; set; } //пауза
 
+        public bool IsGameStarted { get; set; } = false;
+        public Texture2D StartScreenTexture { get; set; }
+
     }
 }
