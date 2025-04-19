@@ -12,6 +12,7 @@ namespace Project2
         private const float AsteroidSpawnTime = 2f;
         private float _timeSinceLastFuelSpawn;
         private const float FuelSpawnTime = 10f;
+        private bool _wasSpacePressed;
 
         public GameController(GameModel model)
         {
@@ -56,8 +57,8 @@ namespace Project2
                     pirate.Bullets.Add(new PirateBullet
                     {
                         Position = new Vector2(
-                            pirate.Position.X - 20,
-                            pirate.Position.Y + 20
+                            pirate.Position.X - 30,
+                            pirate.Position.Y + 5
                         )
                     });
                     pirate.ShootCooldown = 2f;
@@ -91,6 +92,8 @@ namespace Project2
         }
         private void CheckBulletCollisions()
         {
+            if (_model.IsInvulnerable) return; // Игнорируем урон при неуязвимости
+
             foreach (var pirate in _model.Pirates.ToList())
             {
                 foreach (var bullet in pirate.Bullets.ToList())
@@ -98,8 +101,8 @@ namespace Project2
                     if (bullet.Bounds.Intersects(_model.ShipBounds))
                     {
                         pirate.Bullets.Remove(bullet);
-                        _model.Hearts--; // Уменьшаем жизни
-                        if (_model.Hearts <= 0) _model.IsGameOver = true;
+                        ApplyDamage();
+                        return; // Обрабатываем только одно попадание за кадр
                     }
                 }
             }
@@ -107,18 +110,37 @@ namespace Project2
 
         public void Update(GameTime gameTime)
         {
-            //if (_model.IsPaused) return;
+            var keyboardState = Keyboard.GetState();
+
+            // Обработка паузы по пробелу (с защитой от залипания)
+            if (keyboardState.IsKeyDown(Keys.Space) && !_wasSpacePressed)
+            {
+                _model.IsPaused = !_model.IsPaused;
+            }
+            _wasSpacePressed = keyboardState.IsKeyDown(Keys.Space);
+
+            if (_model.IsPaused) return;
+
+            if (_model.IsInvulnerable)
+            {
+                _model.InvulnerabilityTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (_model.InvulnerabilityTimer <= 0)
+                {
+                    _model.IsInvulnerable = false;
+                }
+            }
 
             UpdatePirates(gameTime);
             UpdatePirateBullets();
             CheckBulletCollisions();
 
-            var keyboardState = Keyboard.GetState();
             UpdateShip(keyboardState);
+
             UpdateAsteroids(gameTime);
             UpdateFuelCans(gameTime);
             UpdateResources();
             CheckCollisions();
+
             // В GameController.Update():
             if (_model.IsHit)
             {
@@ -235,28 +257,30 @@ namespace Project2
 
         private void CheckCollisions()
         {
-            if (_model.IsGameOver || _model.IsHit) return; // Не проверяем при неуязвимости
+            if (_model.IsGameOver || _model.IsInvulnerable) return;
 
-            foreach (var asteroid in _model.Asteroids)
+            foreach (var asteroid in _model.Asteroids.ToList())
             {
                 if (asteroid.Bounds.Intersects(_model.ShipBounds))
                 {
                     _model.Asteroids.Remove(asteroid);
-                    _model.Hearts--; // Отнимаем жизнь
-
-                    // Активируем эффект неуязвимости
-                    _model.IsHit = true;
-                    _model.HitCooldown = 2.0f; // 2 секунды неуязвимости
-
-                    if (_model.Hearts <= 0)
-                    {
-                        _model.IsGameOver = true;
-                    }
-                    return; // Выходим после первого столкновения
+                    ApplyDamage();
+                    return;
                 }
             }
-        }
 
+        }
+        private void ApplyDamage()
+        {
+            _model.Hearts--;
+            _model.IsInvulnerable = true;
+            _model.InvulnerabilityTimer = _model.InvulnerabilityDuration;
+
+            if (_model.Hearts <= 0)
+            {
+                _model.IsGameOver = true;
+            }
+        }
 
     }
 }

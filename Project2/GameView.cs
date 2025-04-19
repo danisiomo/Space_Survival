@@ -8,6 +8,7 @@ namespace Project2
     {
         private readonly GameModel _model;
         private readonly SpriteBatch _spriteBatch;
+        private float _totalTime;
 
         public GameView(GameModel model, SpriteBatch spriteBatch)
         {
@@ -15,7 +16,16 @@ namespace Project2
             _spriteBatch = spriteBatch;
         }
 
-        public void Draw()
+        // Обновляем в GameView (если нет метода Update)
+        public void Update(GameTime gameTime)
+        {
+            if (!_model.IsPaused) // Считаем время только вне паузы
+            {
+                _totalTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+        }
+
+        public void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
 
@@ -51,8 +61,18 @@ namespace Project2
 
             // Корабль
             Color shipColor = Color.White;
-            if (_model.IsBoosting) shipColor = Color.Red;
-            if (_model.IsHit) shipColor = Color.DarkRed * (0.5f + 0.5f * (float)Math.Sin(_model.HitCooldown * 10));
+
+            if (_model.IsBoosting)
+            {
+                shipColor = Color.Red;
+            }
+            else if (_model.IsInvulnerable)
+            {
+                // Мигающий зеленоватый эффект
+                float blinkSpeed = 10f; // Скорость мигания
+                float alpha = 0.7f + 0.3f * (float)Math.Sin(_model.InvulnerabilityTimer * blinkSpeed);
+                shipColor = new Color(100, 255, 100) * alpha; // Зеленоватый цвет
+            }
 
             _spriteBatch.Draw(
                 _model.ShipTexture,
@@ -95,15 +115,25 @@ namespace Project2
                 Color.White
             );
 
-            // Отрисовка сердечек (жизней)
+            // Сердечки под счетчиком
+            int heartSize = 25; // Размер сердечка
+            int heartY = 40; // Позиция Y (под текстом топлива)
+            int heartSpacing = 5; // Расстояние между сердечками
+
             for (int i = 0; i < _model.Hearts; i++)
             {
                 _spriteBatch.Draw(
                     _model.HeartTexture,
-                    new Rectangle(10 + 200 + i * 30, 10, 25, 25), // Позиция рядом с показателями
+                    new Rectangle(
+                        10 + i * (heartSize + heartSpacing), // X позиция
+                        heartY, // Y позиция
+                        heartSize,
+                        heartSize
+                    ),
                     Color.White
                 );
             }
+            
 
             if (_model.IsGameOver)
             {
@@ -115,6 +145,58 @@ namespace Project2
                     new Vector2(_model.ScreenWidth / 2 - textSize.X / 2,
                                _model.ScreenHeight / 2 - textSize.Y / 2),
                     Color.Red
+                );
+            }
+
+            if (_model.IsPaused)
+            {
+                // 1. Затемнение экрана
+                _spriteBatch.Draw(
+                    _model.BackgroundTexture, // Можно использовать любую текстуру
+                    new Rectangle(0, 0, _model.ScreenWidth, _model.ScreenHeight),
+                    Color.Black * 0.5f // Полупрозрачное затемнение
+                );
+
+                // 2. Текст "PAUSED" с эффектом пульсации
+                string pauseText = "PAUSED";
+                Vector2 textSize = _model.Font.MeasureString(pauseText);
+                // Увеличиваем размер в 2 раза (базовый масштаб)
+                float baseScale = 2.0f;
+                // Добавляем легкую пульсацию (опционально)
+                float pulseScale = 0.1f * (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * 5);
+                float totalScale = baseScale + pulseScale;
+
+                // Позиционируем выше центра (на 25% выше центра)
+                Vector2 position = new Vector2(
+                    _model.ScreenWidth / 2 - (textSize.X * totalScale) / 2,
+                    _model.ScreenHeight / 3 - (textSize.Y * totalScale) / 2  // 1/3 высоты вместо центра
+                );
+                // Мерцание с частотой 2Hz (2 раза в секунду)
+                float blink = 0.7f + 0.3f * (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * 5);
+
+                _spriteBatch.DrawString(
+                    _model.Font,
+                    pauseText,
+                    position,
+                    Color.Yellow * blink,
+                    0f,
+                    Vector2.Zero,
+                    totalScale,
+                    SpriteEffects.None,
+                    0f
+                );
+
+                // 3. Подсказка для продолжения
+                string hintText = "Press SPACE to continue";
+                Vector2 hintSize = _model.Font.MeasureString(hintText);
+                _spriteBatch.DrawString(
+                    _model.Font,
+                    hintText,
+                    new Vector2(
+                        _model.ScreenWidth / 2 - hintSize.X / 2,
+                        _model.ScreenHeight / 2 + 50
+                    ),
+                    Color.White * 0.8f
                 );
             }
             _spriteBatch.End();

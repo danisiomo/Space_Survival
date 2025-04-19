@@ -27,7 +27,7 @@ namespace Project2
             set => _position = value;
         }
         public float Speed { get; } = 7f;
-        public Rectangle Bounds => new((int)_position.X, (int)_position.Y, 10, 5);
+        public Rectangle Bounds => new((int)_position.X, (int)_position.Y, 20, 20);
     }
 
     public class Asteroid
@@ -101,6 +101,12 @@ namespace Project2
 
         public bool IsHit { get; set; }
         public float HitCooldown { get; set; }
+
+        public bool IsInvulnerable { get; set; } // Флаг неуязвимости
+        public float InvulnerabilityTimer { get; set; } // Таймер неуязвимости
+        public float InvulnerabilityDuration { get; } = 2.0f; // Длительность эффекта
+
+        public bool IsPaused { get; set; } //пауза
 
     }
 }

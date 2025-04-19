@@ -51,7 +51,7 @@ namespace Project2
             _model.PirateTexture = Content.Load<Texture2D>("piratik");
             _model.PirateBulletTexture = Content.Load<Texture2D>("pirate_bull");
 
-            _model.HeartTexture = Content.Load<Texture2D>("heart"); // "heart" - имя файла текстуры
+            _model.HeartTexture = Content.Load<Texture2D>("heart"); 
         }
 
         protected override void Update(GameTime gameTime)
@@ -60,7 +60,7 @@ namespace Project2
             {
                 Exit(); // Завершаем игру при столкновении или нажатии ESC
             }
-
+            _view.Update(gameTime);
             _controller.Update(gameTime);
 
             // Завершение при истощении топлива
@@ -75,7 +75,7 @@ namespace Project2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            _view.Draw();
+            _view.Draw(gameTime); // Передаем gameTime в GameView
             base.Draw(gameTime);
         }
     }
