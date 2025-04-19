@@ -18,14 +18,116 @@ namespace Project2
             _model = model;
         }
 
+        private float _pirateSpawnTimer;
+        private float PirateSpawnInterval = 5f; // Каждые 5 секунд
+
+        private void UpdatePirates(GameTime gameTime)
+        {
+            _pirateSpawnTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_pirateSpawnTimer >= PirateSpawnInterval ||
+                (_model.Pirates.Count == 0 && _pirateSpawnTimer >= 2f)) // Первый пират через 2 сек
+            {
+                _model.Pirates.Add(new Pirate
+                {
+                    Position = new Vector2(
+                        _model.ScreenWidth,
+                        Random.Shared.Next(100, _model.ScreenHeight - 100)
+                    ),
+                    Speed = Random.Shared.Next(3, 6) // Разная скорость
+                });
+                _pirateSpawnTimer = 0;
+
+                // Рандомный интервал (3-7 секунд)
+                PirateSpawnInterval = Random.Shared.Next(3, 8);
+            }
+
+            foreach (var pirate in _model.Pirates.ToList())
+            {
+                // Обновляем позицию через свойство
+                pirate.Position = new Vector2(
+                    pirate.Position.X - pirate.Speed,
+                    pirate.Position.Y
+                );
+
+                pirate.ShootCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (pirate.ShootCooldown <= 0)
+                {
+                    pirate.Bullets.Add(new PirateBullet
+                    {
+                        Position = new Vector2(
+                            pirate.Position.X - 20,
+                            pirate.Position.Y + 20
+                        )
+                    });
+                    pirate.ShootCooldown = 2f;
+                }
+
+                if (pirate.Position.X < -100)
+                {
+                    _model.Pirates.Remove(pirate);
+                }
+            }
+        }
+
+        private void UpdatePirateBullets()
+        {
+            foreach (var pirate in _model.Pirates.ToList())
+            {
+                foreach (var bullet in pirate.Bullets.ToList())
+                {
+                    // Обновляем позицию пули
+                    bullet.Position = new Vector2(
+                        bullet.Position.X - bullet.Speed,
+                        bullet.Position.Y
+                    );
+
+                    if (bullet.Position.X < -10)
+                    {
+                        pirate.Bullets.Remove(bullet);
+                    }
+                }
+            }
+        }
+        private void CheckBulletCollisions()
+        {
+            foreach (var pirate in _model.Pirates.ToList())
+            {
+                foreach (var bullet in pirate.Bullets.ToList())
+                {
+                    if (bullet.Bounds.Intersects(_model.ShipBounds))
+                    {
+                        pirate.Bullets.Remove(bullet);
+                        _model.Hearts--; // Уменьшаем жизни
+                        if (_model.Hearts <= 0) _model.IsGameOver = true;
+                    }
+                }
+            }
+        }
+
         public void Update(GameTime gameTime)
         {
+            //if (_model.IsPaused) return;
+
+            UpdatePirates(gameTime);
+            UpdatePirateBullets();
+            CheckBulletCollisions();
+
             var keyboardState = Keyboard.GetState();
             UpdateShip(keyboardState);
             UpdateAsteroids(gameTime);
             UpdateFuelCans(gameTime);
             UpdateResources();
             CheckCollisions();
+            // В GameController.Update():
+            if (_model.IsHit)
+            {
+                _model.HitCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (_model.HitCooldown <= 0)
+                {
+                    _model.IsHit = false;
+                }
+            }
         }
 
         private void UpdateShip(KeyboardState keyboardState)
@@ -133,17 +235,28 @@ namespace Project2
 
         private void CheckCollisions()
         {
-            // Проверяем столкновения только если игра ещё не окончена
-            if (_model.IsGameOver) return;
+            if (_model.IsGameOver || _model.IsHit) return; // Не проверяем при неуязвимости
 
             foreach (var asteroid in _model.Asteroids)
             {
                 if (asteroid.Bounds.Intersects(_model.ShipBounds))
                 {
-                    _model.IsGameOver = true;
-                    return;
+                    _model.Asteroids.Remove(asteroid);
+                    _model.Hearts--; // Отнимаем жизнь
+
+                    // Активируем эффект неуязвимости
+                    _model.IsHit = true;
+                    _model.HitCooldown = 2.0f; // 2 секунды неуязвимости
+
+                    if (_model.Hearts <= 0)
+                    {
+                        _model.IsGameOver = true;
+                    }
+                    return; // Выходим после первого столкновения
                 }
             }
         }
+
+
     }
 }

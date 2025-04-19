@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Project2
@@ -49,17 +50,42 @@ namespace Project2
             }
 
             // Корабль
+            Color shipColor = Color.White;
+            if (_model.IsBoosting) shipColor = Color.Red;
+            if (_model.IsHit) shipColor = Color.DarkRed * (0.5f + 0.5f * (float)Math.Sin(_model.HitCooldown * 10));
+
             _spriteBatch.Draw(
                 _model.ShipTexture,
                 _model.ShipPosition,
                 null,
-                _model.IsBoosting ? Color.Red : Color.White,
+                shipColor,
                 0f,
                 new Vector2(_model.ShipTexture.Width / 2, _model.ShipTexture.Height / 2),
                 1f,
                 SpriteEffects.None,
                 0f
             );
+
+            // В методе Draw()
+            foreach (var pirate in _model.Pirates)
+            {
+                // Корабль пирата
+                _spriteBatch.Draw(
+                    _model.PirateTexture,
+                    pirate.Bounds,
+                    Color.White
+                );
+
+                // Пули пирата
+                foreach (var bullet in pirate.Bullets)
+                {
+                    _spriteBatch.Draw(
+                        _model.PirateBulletTexture,
+                        bullet.Bounds,
+                        Color.Red // Красные пули для отличия
+                    );
+                }
+            }
 
             // HUD (без кислорода)
             _spriteBatch.DrawString(
@@ -68,6 +94,16 @@ namespace Project2
                 new Vector2(10, 10),
                 Color.White
             );
+
+            // Отрисовка сердечек (жизней)
+            for (int i = 0; i < _model.Hearts; i++)
+            {
+                _spriteBatch.Draw(
+                    _model.HeartTexture,
+                    new Rectangle(10 + 200 + i * 30, 10, 25, 25), // Позиция рядом с показателями
+                    Color.White
+                );
+            }
 
             if (_model.IsGameOver)
             {

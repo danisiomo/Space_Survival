@@ -47,6 +47,11 @@ namespace Project2
             _model.FuelCanTexture = Content.Load<Texture2D>("fuelcan");
             _model.Font = Content.Load<SpriteFont>("font");
             _view = new GameView(_model, _spriteBatch);
+
+            _model.PirateTexture = Content.Load<Texture2D>("piratik");
+            _model.PirateBulletTexture = Content.Load<Texture2D>("pirate_bull");
+
+            _model.HeartTexture = Content.Load<Texture2D>("heart"); // "heart" - имя файла текстуры
         }
 
         protected override void Update(GameTime gameTime)

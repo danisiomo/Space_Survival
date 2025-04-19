@@ -4,6 +4,32 @@ using System.Collections.Generic;
 
 namespace Project2
 {
+    public class Pirate
+    {
+        private Vector2 _position;
+        public Vector2 Position
+        {
+            get => _position;
+            set => _position = value;
+        }
+        public float Speed { get; set; } = 3f; // Теперь свойство можно изменять
+        public List<PirateBullet> Bullets { get; } = new();
+        public Rectangle Bounds => new((int)_position.X, (int)_position.Y, 60, 40);
+        public float ShootCooldown { get; set; }
+    }
+
+    public class PirateBullet
+    {
+        private Vector2 _position;
+        public Vector2 Position
+        {
+            get => _position;
+            set => _position = value;
+        }
+        public float Speed { get; } = 7f;
+        public Rectangle Bounds => new((int)_position.X, (int)_position.Y, 10, 5);
+    }
+
     public class Asteroid
     {
         private Vector2 _position;
@@ -62,5 +88,19 @@ namespace Project2
         // Экран
         public int ScreenWidth { get; set; }
         public int ScreenHeight { get; set; }
+
+        //пираты
+        public List<Pirate> Pirates { get; } = new();
+        public Texture2D PirateTexture { get; set; }
+        public Texture2D PirateBulletTexture { get; set; }
+
+        //cердца
+        public int Hearts { get; set; } = 3; // Начальное количество жизней
+        public Texture2D HeartTexture { get; set; } // Текстура сердца
+        public float HitInvulnerabilityTime { get; } = 2.0f; // Длительность неуязвимости
+
+        public bool IsHit { get; set; }
+        public float HitCooldown { get; set; }
+
     }
 }
