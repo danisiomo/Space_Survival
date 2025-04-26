@@ -113,6 +113,14 @@ namespace Project2
             var keyboardState = Keyboard.GetState();
             var mouseState = Mouse.GetState();
 
+            // Завершение игры при паузе + ESC
+            if (_model.IsPaused && keyboardState.IsKeyDown(Keys.Escape))
+            {
+                _model.IsGameOver = true;
+                _model.SurvivalTime = _model.TotalTime;
+                return;
+            }
+
             // Если игра еще не начата
             if (!_model.IsGameStarted)
             {
@@ -161,6 +169,35 @@ namespace Project2
                     _model.IsHit = false;
                 }
             }
+            if (_model.Hearts <= 0 || _model.Fuel <= 0)
+            {
+                _model.IsGameOver = true;
+                _model.SurvivalTime = _model.TotalTime; // Используем TotalTime из модели
+            }
+
+        }
+        // Обработка рестарта (вызывается при нажатии кнопки в GameView)
+        public void RestartGame()
+        {
+            // Сброс состояния
+            _model.Hearts = 3;
+            _model.Fuel = 100f;
+            _model.Score = 0;
+            _model.TotalTime = 0f;
+            _model.IsGameOver = false;
+            _model.IsPaused = false;
+            _model.BackgroundOffset = Vector2.Zero;
+            _model.ShipPosition = new Vector2(_model.ScreenWidth / 2f, _model.ScreenHeight / 2f);
+
+            // Очистка списков
+            _model.Asteroids.Clear();
+            _model.Pirates.Clear();
+            _model.FuelCans.Clear();
+
+            // Сброс таймеров
+            _timeSinceLastAsteroid = 0;
+            _pirateSpawnTimer = 0;
+            _timeSinceLastFuelSpawn = 0;
         }
 
         private void UpdateShip(KeyboardState keyboardState)

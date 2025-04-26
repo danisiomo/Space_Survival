@@ -111,5 +111,9 @@ namespace Project2
         public bool IsGameStarted { get; set; } = false;
         public Texture2D StartScreenTexture { get; set; }
 
+        public float SurvivalTime { get; set; } // Время выживания в секундах
+        public bool IsRestartRequested { get; set; } // Флаг запроса рестарта
+                                                     
+        public float TotalTime { get; set; } // Время с начала игры
     }
 }

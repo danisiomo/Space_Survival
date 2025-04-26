@@ -71,20 +71,25 @@ namespace Project2
 
         protected override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape) || _model.IsGameOver)
+            if (_model.IsRestartRequested)
             {
-                Exit(); // Завершаем игру при столкновении или нажатии ESC
+                _model.IsRestartRequested = false;
+                _model.IsGameOver = false;
+                _controller.RestartGame();
+                _model.TotalTime = 0f;
             }
-            _view.Update(gameTime);
-            _controller.Update(gameTime);
 
-            // Завершение при истощении топлива
-            if (_model.Fuel <= 0)
+            // Выход по ESC при Game Over
+            if (_model.IsGameOver && Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
             }
 
-            base.Update(gameTime);
+            if (!_model.IsGameOver)
+            {
+                _controller.Update(gameTime);
+            }
+            _view.Update(gameTime); ;
         }
 
         protected override void Draw(GameTime gameTime)
