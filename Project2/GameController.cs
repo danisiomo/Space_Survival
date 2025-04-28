@@ -43,6 +43,7 @@ namespace Project2
 
             foreach (var pirate in _model.Pirates.ToList())
             {
+                pirate.Update(_model.ShipPosition, (float)gameTime.ElapsedGameTime.TotalSeconds);
                 // Обновляем позицию через свойство
                 pirate.Position = new Vector2(
                     pirate.Position.X - pirate.Speed,
@@ -52,13 +53,10 @@ namespace Project2
                 pirate.ShootCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (pirate.ShootCooldown <= 0)
                 {
-                    pirate.Bullets.Add(new PirateBullet
-                    {
-                        Position = new Vector2(
-                            pirate.Position.X - 30,
-                            pirate.Position.Y + 5
-                        )
-                    });
+                    pirate.Bullets.Add(new PirateBullet(
+                        startPos: pirate.Position,
+                        direction: pirate.Direction // Пули летят в сторону игрока
+                    ));
                     pirate.ShootCooldown = 2f;
                 }
 
@@ -69,22 +67,16 @@ namespace Project2
             }
         }
 
-        private void UpdatePirateBullets()
+        private void UpdatePirateBullets(GameTime gameTime)
         {
             foreach (var pirate in _model.Pirates.ToList())
             {
                 foreach (var bullet in pirate.Bullets.ToList())
                 {
                     // Обновляем позицию пули
-                    bullet.Position = new Vector2(
-                        bullet.Position.X - bullet.Speed,
-                        bullet.Position.Y
-                    );
-
-                    if (bullet.Position.X < -10)
-                    {
+                    bullet.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+                    if (bullet.Position.X < -10 || bullet.Position.X > _model.ScreenWidth)
                         pirate.Bullets.Remove(bullet);
-                    }
                 }
             }
         }
@@ -148,7 +140,7 @@ namespace Project2
             }
 
             UpdatePirates(gameTime);
-            UpdatePirateBullets();
+            UpdatePirateBullets(gameTime);
             CheckBulletCollisions();
 
             UpdateShip(keyboardState);

@@ -14,15 +14,30 @@ namespace Project2
             set => _position = value;
         }
         public float Speed { get; set; } = 3f;
-        public Texture2D Texture { get; set; } // Новая property
+        public Texture2D Texture { get; set; } 
         public List<PirateBullet> Bullets { get; } = new();
         public Rectangle Bounds => new((int)_position.X, (int)_position.Y, 60, 40);
         public float ShootCooldown { get; set; }
+        public float Rotation { get; private set; } // Угол поворота в радианах
+        public Vector2 Direction { get; private set; } // Направление движения
+
+        public void Update(Vector2 playerPosition, float deltaTime)
+        {
+            Direction = Vector2.Normalize(playerPosition - Position);
+
+            // Корректировка угла: добавляем MathHelper.Pi (180 градусов), 
+            // чтобы текстура не была перевернутой
+            Rotation = MathF.Atan2(Direction.Y, Direction.X) + MathHelper.Pi;
+
+            // Движение (если нужно)
+            Position += new Vector2(-Speed, 0) * deltaTime; // Пираты всегда летят влево
+        }
     }
 
     public class PirateBullet
     {
         private Vector2 _position;
+        public Vector2 Direction { get; } // Направление движения
         public Vector2 Position
         {
             get => _position;
@@ -30,6 +45,17 @@ namespace Project2
         }
         public float Speed { get; } = 7f;
         public Rectangle Bounds => new((int)_position.X, (int)_position.Y, 20, 20);
+
+        public PirateBullet(Vector2 startPos, Vector2 direction)
+        {
+            Position = startPos;
+            Direction = direction;
+        }
+
+        public void Update(float deltaTime)
+        {
+            Position += Direction * Speed;
+        }
     }
 
     public class Asteroid

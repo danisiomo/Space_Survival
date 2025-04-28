@@ -141,11 +141,17 @@ namespace Project2
                     // Пираты()
                     foreach (var pirate in _model.Pirates)
                     {
-                        // Корабль пирата
+                        // Спрайт пирата
                         _spriteBatch.Draw(
-                            pirate.Texture, // Случайный спрайт
-                            pirate.Bounds,
-                            Color.White
+                            pirate.Texture,
+                            pirate.Position,
+                            null,
+                            Color.White,
+                            pirate.Rotation, // Угол поворота
+                            new Vector2(pirate.Texture.Width / 2, pirate.Texture.Height / 2), // Центр вращения
+                            0.1f,
+                            SpriteEffects.None,
+                            0f
                         );
 
                         // Пули пирата
@@ -153,8 +159,14 @@ namespace Project2
                         {
                             _spriteBatch.Draw(
                                 _model.PirateBulletTexture,
-                                bullet.Bounds,
-                                Color.Red // Красные пули
+                                bullet.Position,
+                                null,
+                                Color.Red,
+                                MathF.Atan2(bullet.Direction.Y, bullet.Direction.X) + MathHelper.Pi, // +180°, // Поворот пули
+                                new Vector2(_model.PirateBulletTexture.Width / 2, _model.PirateBulletTexture.Height / 2),
+                                0.2f,
+                                SpriteEffects.None,
+                                0f
                             );
                         }
                     }

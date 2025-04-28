@@ -43,12 +43,12 @@ namespace Project2
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _model.ShipTexture = Content.Load<Texture2D>("ship");
             _model.BackgroundTexture = Content.Load<Texture2D>("background_1");
-            _model.AsteroidTexture = Content.Load<Texture2D>("asteroid");
+            //_model.AsteroidTexture = Content.Load<Texture2D>("asteroid");
             _model.FuelCanTexture = Content.Load<Texture2D>("fuelcan");
             _model.Font = Content.Load<SpriteFont>("font");
             _view = new GameView(_model, _spriteBatch);
 
-            _model.PirateTexture = Content.Load<Texture2D>("piratik");
+            //_model.PirateTexture = Content.Load<Texture2D>("piratik");
             _model.PirateBulletTexture = Content.Load<Texture2D>("pirate_bull");
 
             _model.HeartTexture = Content.Load<Texture2D>("heart");
@@ -58,11 +58,12 @@ namespace Project2
             //_model.AsteroidTextures.Add(Content.Load<Texture2D>("asteroid_2"));
             //_model.AsteroidTextures.Add(Content.Load<Texture2D>("asteroid_3"));
 
-            // Загрузка пиратов (например, 2 варианта)
+            // Загрузка пиратов (3 варианта)
             _model.PirateTextures.Add(Content.Load<Texture2D>("piratik"));
+            _model.PirateTextures.Add(Content.Load<Texture2D>("pirat"));
             //_model.PirateTextures.Add(Content.Load<Texture2D>("pirate_bull"));
             _model.PirateTextures.Add(Content.Load<Texture2D>("piratiks"));
-            _model.PirateTextures.Add(Content.Load<Texture2D>("pirate_128"));
+            //_model.PirateTextures.Add(Content.Load<Texture2D>("pirate_128"));
 
             try
             {
