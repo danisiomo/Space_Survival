@@ -53,8 +53,17 @@ namespace Project2
 
             _model.HeartTexture = Content.Load<Texture2D>("heart");
 
+            // Загрузка астероидов (например, 3 варианта)
+            _model.AsteroidTextures.Add(Content.Load<Texture2D>("asteroid"));
+            //_model.AsteroidTextures.Add(Content.Load<Texture2D>("asteroid_2"));
+            //_model.AsteroidTextures.Add(Content.Load<Texture2D>("asteroid_3"));
 
-            
+            // Загрузка пиратов (например, 2 варианта)
+            _model.PirateTextures.Add(Content.Load<Texture2D>("piratik"));
+            //_model.PirateTextures.Add(Content.Load<Texture2D>("pirate_bull"));
+            _model.PirateTextures.Add(Content.Load<Texture2D>("piratiks"));
+            _model.PirateTextures.Add(Content.Load<Texture2D>("pirate_128"));
+
             try
             {
                 _model.StartScreenTexture = Content.Load<Texture2D>("start_screen");

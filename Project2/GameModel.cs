@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace Project2
@@ -12,7 +13,8 @@ namespace Project2
             get => _position;
             set => _position = value;
         }
-        public float Speed { get; set; } = 3f; 
+        public float Speed { get; set; } = 3f;
+        public Texture2D Texture { get; set; } // Новая property
         public List<PirateBullet> Bullets { get; } = new();
         public Rectangle Bounds => new((int)_position.X, (int)_position.Y, 60, 40);
         public float ShootCooldown { get; set; }
@@ -39,7 +41,20 @@ namespace Project2
             set => _position = value;
         }
         public float Speed { get; set; } = 2f;
+        public Texture2D Texture { get; set; } // Новая property
+        public float Rotation { get; private set; } // Текущий угол
+        public float RotationSpeed { get; } // Скорость вращения (радианы/сек)
         public Rectangle Bounds => new Rectangle((int)_position.X, (int)_position.Y, 50, 50);
+        public Asteroid()
+        {
+            // Случайная скорость вращения (-3 до 3 радиан/сек)
+            RotationSpeed = (Random.Shared.NextSingle() - 0.5f) * 6f;
+        }
+
+        public void Update(float deltaTime)
+        {
+            Rotation += RotationSpeed * deltaTime; // Обновляем угол
+        }
     }
 
     public class FuelCan
@@ -115,5 +130,8 @@ namespace Project2
         public bool IsRestartRequested { get; set; } // Флаг запроса рестарта
                                                      
         public float TotalTime { get; set; } // Время с начала игры
+
+        public List<Texture2D> AsteroidTextures { get; } = new(); // Список текстур астероидов
+        public List<Texture2D> PirateTextures { get; } = new();   // Список текстур пиратов
     }
 }

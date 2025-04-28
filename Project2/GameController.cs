@@ -31,11 +31,9 @@ namespace Project2
             {
                 _model.Pirates.Add(new Pirate
                 {
-                    Position = new Vector2(
-                        _model.ScreenWidth,
-                        Random.Shared.Next(100, _model.ScreenHeight - 100)
-                    ),
-                    Speed = Random.Shared.Next(3, 6) // Разная скорость
+                    Position = new Vector2(_model.ScreenWidth, Random.Shared.Next(100, _model.ScreenHeight - 100)),
+                    Speed = Random.Shared.Next(3, 6),
+                    Texture = _model.PirateTextures[Random.Shared.Next(_model.PirateTextures.Count)] // Случайный спрайт
                 });
                 _pirateSpawnTimer = 0;
 
@@ -239,11 +237,9 @@ namespace Project2
             {
                 _model.Asteroids.Add(new Asteroid
                 {
-                    Position = new Vector2(
-                        _model.ScreenWidth,
-                        Random.Shared.Next(50, _model.ScreenHeight - 50)
-                    ),
-                    Speed = Random.Shared.Next(1, 4)
+                    Position = new Vector2(_model.ScreenWidth, Random.Shared.Next(50, _model.ScreenHeight - 50)),
+                    Speed = Random.Shared.Next(1, 4),
+                    Texture = _model.AsteroidTextures[Random.Shared.Next(_model.AsteroidTextures.Count)] // Выбор случайной текстуры
                 });
                 _timeSinceLastAsteroid = 0;
             }
@@ -255,6 +251,7 @@ namespace Project2
                     asteroid.Position.X - asteroid.Speed,
                     asteroid.Position.Y
                 );
+                asteroid.Update((float)gameTime.ElapsedGameTime.TotalSeconds); // Обновляем вращение
 
                 if (asteroid.Position.X < -50)
                 {

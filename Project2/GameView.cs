@@ -86,9 +86,15 @@ namespace Project2
                     foreach (var asteroid in _model.Asteroids)
                     {
                         _spriteBatch.Draw(
-                            _model.AsteroidTexture,
-                            asteroid.Bounds,
-                            Color.White
+                            asteroid.Texture,
+                            asteroid.Position, // Позиция центра
+                            null,
+                            Color.White,
+                            asteroid.Rotation, // Передаем текущий угол
+                            new Vector2(asteroid.Texture.Width / 2, asteroid.Texture.Height / 2), 
+                            0.4f,
+                            SpriteEffects.None,
+                            0f
                         );
                     }
 
@@ -132,12 +138,12 @@ namespace Project2
                         0f
                     );
 
-                    // В методе Draw()
+                    // Пираты()
                     foreach (var pirate in _model.Pirates)
                     {
                         // Корабль пирата
                         _spriteBatch.Draw(
-                            _model.PirateTexture,
+                            pirate.Texture, // Случайный спрайт
                             pirate.Bounds,
                             Color.White
                         );
