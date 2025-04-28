@@ -159,5 +159,17 @@ namespace Project2
 
         public List<Texture2D> AsteroidTextures { get; } = new(); // Список текстур астероидов
         public List<Texture2D> PirateTextures { get; } = new();   // Список текстур пиратов
+
+        public class Heart
+        {
+            public Vector2 Position { get; set; }
+            public Rectangle Bounds => new((int)Position.X, (int)Position.Y, 30, 30); // Размер сердца
+            public bool IsCollected { get; set; }
+        }
+
+        public List<Heart> HeartsPickups { get; } = new(); // Список сердец на карте
+        public float HeartSpawnChance { get; } = 0.2f; // 20% шанс спавна
+        public float TimeSinceLastHeartSpawn { get; set; }
+        public float HeartSpawnInterval { get; } = 15f; // Проверка каждые 15 секунд
     }
 }

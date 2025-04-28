@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
+using static Project2.GameModel;
 
 namespace Project2
 {
@@ -149,8 +150,9 @@ namespace Project2
             UpdateFuelCans(gameTime);
             UpdateResources();
             CheckCollisions();
+            TrySpawnHeart(gameTime);
+            CheckHeartCollisions();
 
-            
             if (_model.IsHit)
             {
                 _model.HitCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -316,6 +318,38 @@ namespace Project2
             if (_model.Hearts <= 0)
             {
                 _model.IsGameOver = true;
+            }
+        }
+        private void TrySpawnHeart(GameTime gameTime)
+        {
+            _model.TimeSinceLastHeartSpawn += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_model.TimeSinceLastHeartSpawn >= _model.HeartSpawnInterval)
+            {
+                // Проверяем шанс и что у игрока меньше 3 жизней
+                if (Random.Shared.NextSingle() <= _model.HeartSpawnChance && _model.Hearts < 3)
+                {
+                    _model.HeartsPickups.Add(new Heart
+                    {
+                        Position = new Vector2(
+                            Random.Shared.Next(50, _model.ScreenWidth - 50),
+                            Random.Shared.Next(50, _model.ScreenHeight - 50)
+                        )
+                    });
+                }
+                _model.TimeSinceLastHeartSpawn = 0;
+            }
+        }
+        private void CheckHeartCollisions()
+        {
+            foreach (var heart in _model.HeartsPickups.ToList())
+            {
+                if (!heart.IsCollected && heart.Bounds.Intersects(_model.ShipBounds))
+                {
+                    heart.IsCollected = true;
+                    _model.Hearts = Math.Min(_model.Hearts + 1, 3); // Не больше 3 жизней
+                    _model.HeartsPickups.Remove(heart);
+                }
             }
         }
 

@@ -209,6 +209,18 @@ namespace Project2
                         );
                     }
 
+                    //новые сердца
+                    foreach (var heart in _model.HeartsPickups)
+                    {
+                        if (!heart.IsCollected)
+                        {
+                            _spriteBatch.Draw(
+                                _model.HeartTexture,
+                                heart.Bounds,
+                                Color.White * 0.8f // Легкая прозрачность
+                            );
+                        }
+                    }
 
                     if (_model.IsGameOver)
                     {
