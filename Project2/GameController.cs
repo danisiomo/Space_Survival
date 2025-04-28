@@ -165,6 +165,7 @@ namespace Project2
             {
                 _model.IsGameOver = true;
                 _model.SurvivalTime = _model.TotalTime; // Используем TotalTime из модели
+                _model.UpdateHighScore(_model.Score);
             }
 
         }
@@ -352,6 +353,5 @@ namespace Project2
                 }
             }
         }
-
     }
 }

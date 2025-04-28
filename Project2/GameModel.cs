@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Project2
 {
@@ -171,5 +172,39 @@ namespace Project2
         public float HeartSpawnChance { get; } = 0.2f; // 20% шанс спавна
         public float TimeSinceLastHeartSpawn { get; set; }
         public float HeartSpawnInterval { get; } = 15f; // Проверка каждые 15 секунд
+        public int HighScore { get; private set; }
+        private const string FilePath = "highscore.txt";
+
+        public GameModel()
+        {
+            HighScore = LoadHighScore();
+        }
+
+        // Загрузка рекорда
+        private int LoadHighScore()
+        {
+            try
+            {
+                return File.Exists(FilePath) ? int.Parse(File.ReadAllText(FilePath)) : 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        // Сохранение рекорда
+        public void UpdateHighScore(int currentScore)
+        {
+            if (currentScore > HighScore)
+            {
+                HighScore = currentScore;
+                try
+                {
+                    File.WriteAllText(FilePath, HighScore.ToString());
+                }
+                catch { /* Игнорируем ошибки записи */ }
+            }
+        }
     }
 }

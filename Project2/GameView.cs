@@ -57,6 +57,18 @@ namespace Project2
                     float scale = 1.5f; // Увеличиваем размер текста
                     float pulse = 0.5f + (float)Math.Sin(_model.TotalTime * 3) * 0.5f; // Эффект пульсации
 
+
+                    // Рекорд
+                    string highScoreText = $"High Score: {_model.HighScore}";
+                    Vector2 highScoreSize = _model.Font.MeasureString(highScoreText);
+
+                    _spriteBatch.DrawString(
+                        _model.Font,
+                        highScoreText,
+                        new Vector2(650, 250), // Позиция сверху
+                        Color.ForestGreen
+                    );
+
                     _spriteBatch.DrawString(
                         _model.Font,
                         pressText,
