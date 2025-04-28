@@ -62,11 +62,19 @@ namespace Project2
                     string highScoreText = $"High Score: {_model.HighScore}";
                     Vector2 highScoreSize = _model.Font.MeasureString(highScoreText);
 
+                    // Параметры анимации
+                    float scale1 = 1.5f; // Увеличенный размер (было 1.0)
+                    float alpha = 0.7f + 0.3f * (float)Math.Sin(_model.TotalTime * 3); // Плавное мигание (0.7-1.0)
                     _spriteBatch.DrawString(
                         _model.Font,
                         highScoreText,
-                        new Vector2(650, 250), // Позиция сверху
-                        Color.ForestGreen
+                        new Vector2(700, 280), // Ваши координаты
+                        Color.DarkOrange * alpha, // Добавляем прозрачность
+                        0f,
+                        Vector2.Zero,
+                        scale1, // Применяем масштаб
+                        SpriteEffects.None,
+                        0f
                     );
 
                     _spriteBatch.DrawString(
@@ -312,17 +320,19 @@ namespace Project2
                 Color.Black * 0.5f
             );
 
-            // Текст "GAME OVER"
+            // --- "GAME OVER" с пульсацией ---
             string gameOverText = "GAME OVER";
             Vector2 gameOverSize = _model.Font.MeasureString(gameOverText) * 2.0f;
-            float gameOverX = (_model.ScreenWidth - gameOverSize.X) / 2;
-            float gameOverY = 150;
+            float pulse = 0.5f + (float)Math.Sin(_model.TotalTime * 5) * 0.5f; // Увеличиваем частоту мигания (5 вместо 3)
 
             _spriteBatch.DrawString(
                 _model.Font,
                 gameOverText,
-                new Vector2(gameOverX, gameOverY),
-                Color.Red,
+                new Vector2(
+                    _model.ScreenWidth / 2 - gameOverSize.X / 2,
+                    150
+                ),
+                Color.Red * pulse, // Применяем пульсацию только здесь
                 0f,
                 Vector2.Zero,
                 2.0f,
@@ -330,56 +340,46 @@ namespace Project2
                 0f
             );
 
-            // --- Статистика ---
+            // --- Статистика (без эффектов) ---
             string timeText = $"Time: {_model.SurvivalTime:F1} sec";
             string scoreText = $"Score: {_model.Score}";
+            string highScoreText = $"High Score: {_model.HighScore}";
 
             Vector2 timeSize = _model.Font.MeasureString(timeText);
             Vector2 scoreSize = _model.Font.MeasureString(scoreText);
+            Vector2 highScoreSize = _model.Font.MeasureString(highScoreText);
 
-            float statsX = (_model.ScreenWidth - Math.Max(timeSize.X, scoreSize.X)) / 2;
-            float statsY = gameOverY + gameOverSize.Y + 50;
+            float statsX = _model.ScreenWidth / 2 - Math.Max(Math.Max(timeSize.X, scoreSize.X), highScoreSize.X) / 2;
+            float statsY = 250;
 
-            _spriteBatch.DrawString(
-                _model.Font,
-                timeText,
-                new Vector2(statsX, statsY),
-                Color.White
-            );
+            _spriteBatch.DrawString(_model.Font, timeText, new Vector2(statsX, statsY), Color.White);
+            _spriteBatch.DrawString(_model.Font, scoreText, new Vector2(statsX, statsY + 30), Color.White);
+            _spriteBatch.DrawString(_model.Font, highScoreText, new Vector2(statsX, statsY + 60), Color.Gold);
 
-            _spriteBatch.DrawString(
-                _model.Font,
-                scoreText,
-                new Vector2(statsX, statsY + timeSize.Y + 10),
-                Color.White
-            );
-
-            // --- Кнопки ---
-            float pulse = 0.5f + (float)Math.Sin(_model.TotalTime * 3) * 0.5f;
-
+            // --- Кнопки (статичные) ---
             string restartText = "RESTART (Press R)";
             string quitText = "QUIT (Press ESC)";
 
             Vector2 restartSize = _model.Font.MeasureString(restartText);
             Vector2 quitSize = _model.Font.MeasureString(quitText);
 
-            float buttonX = (_model.ScreenWidth - Math.Max(restartSize.X, quitSize.X)) / 2;
-            float buttonY = statsY + scoreSize.Y + 80;
+            float buttonX = _model.ScreenWidth / 2 - Math.Max(restartSize.X, quitSize.X) / 2;
+            float buttonY = statsY + 120;
 
-            // "Restart"
+            // "RESTART" — жёлтый без мигания
             _spriteBatch.DrawString(
                 _model.Font,
                 restartText,
                 new Vector2(buttonX, buttonY),
-                Color.Yellow * pulse
+                Color.GreenYellow
             );
 
-            // "Quit"
+            // "QUIT" — серый без мигания
             _spriteBatch.DrawString(
                 _model.Font,
                 quitText,
-                new Vector2(buttonX, buttonY + restartSize.Y + 20),
-                Color.LightGray * pulse
+                new Vector2(buttonX, buttonY + 40),
+                Color.LightGray
             );
         }
     }
