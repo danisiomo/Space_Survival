@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin asteroid_new.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:asteroid_new.png
+
 #begin asteroid.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,6 +72,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:background1.jpg
+
+#begin D:/учеба/игра/asteroid_2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:D:/учеба/игра/asteroid_2.png;asteroid_2.png
+
+#begin D:/учеба/игра/asteroid_3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:D:/учеба/игра/asteroid_3.png;asteroid_3.png
 
 #begin font.spritefont
 /importer:FontDescriptionImporter
@@ -211,18 +247,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ship.png
-
-#begin start_screen.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:start_screen.jpg
 
 #begin start_screen.jpg
 /importer:TextureImporter

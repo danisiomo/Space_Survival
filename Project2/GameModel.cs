@@ -25,13 +25,12 @@ namespace Project2
         public void Update(Vector2 playerPosition, float deltaTime)
         {
             Direction = Vector2.Normalize(playerPosition - Position);
-
+            // Вычисляем вектор направления от пирата к игроку
+            // playerPosition - позиция корабля игрока, Position - позиция пирата
             // Корректировка угла: добавляем MathHelper.Pi (180 градусов), 
             // чтобы текстура не была перевернутой
             Rotation = MathF.Atan2(Direction.Y, Direction.X) + MathHelper.Pi;
-
-            // Движение (если нужно)
-            Position += new Vector2(-Speed, 0) * deltaTime; // Пираты всегда летят влево
+            Position += new Vector2(-Speed, 0) * deltaTime; 
         }
     }
 

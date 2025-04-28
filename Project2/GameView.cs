@@ -59,7 +59,7 @@ namespace Project2
 
 
                     // Рекорд
-                    string highScoreText = $"High Score: {_model.HighScore}";
+                    string highScoreText = $"HIGH SCORE: {_model.HighScore}";
                     Vector2 highScoreSize = _model.Font.MeasureString(highScoreText);
 
                     // Параметры анимации
@@ -69,7 +69,7 @@ namespace Project2
                         _model.Font,
                         highScoreText,
                         new Vector2(700, 280), // Ваши координаты
-                        Color.DarkOrange * alpha, // Добавляем прозрачность
+                        Color.Red * alpha, // Добавляем прозрачность
                         0f,
                         Vector2.Zero,
                         scale1, // Применяем масштаб

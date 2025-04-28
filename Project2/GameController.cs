@@ -186,11 +186,16 @@ namespace Project2
             _model.Asteroids.Clear();
             _model.Pirates.Clear();
             _model.FuelCans.Clear();
+            
 
             // Сброс таймеров
             _timeSinceLastAsteroid = 0;
             _pirateSpawnTimer = 0;
             _timeSinceLastFuelSpawn = 0;
+            _model.TimeSinceLastHeartSpawn = 0; // Сброс таймера сердец
+             
+            // Очищаем все сердца на карте
+            _model.HeartsPickups.Clear();
         }
 
         private void UpdateShip(KeyboardState keyboardState)
