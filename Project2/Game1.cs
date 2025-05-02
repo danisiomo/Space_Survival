@@ -42,7 +42,7 @@ namespace Project2
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _model.ShipTexture = Content.Load<Texture2D>("ship");
-            _model.BackgroundTexture = Content.Load<Texture2D>("background_1");
+            //_model.BackgroundTexture = Content.Load<Texture2D>("background_1");
             //_model.AsteroidTexture = Content.Load<Texture2D>("asteroid");
             _model.FuelCanTexture = Content.Load<Texture2D>("fuelcan");
             _model.Font = Content.Load<SpriteFont>("font");
@@ -65,6 +65,9 @@ namespace Project2
             //_model.PirateTextures.Add(Content.Load<Texture2D>("pirate_bull"));
             _model.PirateTextures.Add(Content.Load<Texture2D>("piratiks"));
             //_model.PirateTextures.Add(Content.Load<Texture2D>("pirate_128"));
+
+            _model.EasyBackground = Content.Load<Texture2D>("background_1"); // Для 1 уровня
+            _model.HardBackground = Content.Load<Texture2D>("background_hard"); // Для 2 уровня
 
             try
             {

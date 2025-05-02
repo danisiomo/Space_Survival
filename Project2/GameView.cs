@@ -54,7 +54,7 @@ namespace Project2
             {
                 // Фон
                 _spriteBatch.Draw(
-                    _model.BackgroundTexture,
+                    _model.CurrentBackground,
                     new Rectangle(0, 0, _model.ScreenWidth, _model.ScreenHeight),
                     Color.White
                 );
@@ -138,7 +138,7 @@ namespace Project2
                             _model.PirateBulletTexture,
                             bullet.Position,
                             null,
-                            Color.Red,
+                            _model.PirateBulletColor,
                             MathF.Atan2(bullet.Direction.Y, bullet.Direction.X) + MathHelper.Pi, // +180°, // Поворот пули
                             new Vector2(_model.PirateBulletTexture.Width / 2, _model.PirateBulletTexture.Height / 2),
                             0.2f,
@@ -216,7 +216,7 @@ namespace Project2
                 {
                     // 1. Затемнение экрана
                     _spriteBatch.Draw(
-                        _model.BackgroundTexture, // Можно использовать любую текстуру
+                        _model.CurrentBackground, // Можно использовать любую текстуру
                         new Rectangle(0, 0, _model.ScreenWidth, _model.ScreenHeight),
                         Color.Black * 0.5f // Полупрозрачное затемнение
                     );
@@ -321,7 +321,7 @@ namespace Project2
         {
             // Затемнение фона
             _spriteBatch.Draw(
-                _model.BackgroundTexture,
+                _model.CurrentBackground,
                 new Rectangle(0, 0, _model.ScreenWidth, _model.ScreenHeight),
                 Color.Black * 0.5f
             );
@@ -392,7 +392,7 @@ namespace Project2
         {
             // Затемнение фона (более темное)
             _spriteBatch.Draw(
-                _model.BackgroundTexture,
+                _model.CurrentBackground,
                 new Rectangle(0, 0, _model.ScreenWidth, _model.ScreenHeight),
                 Color.Black * 0.8f
             );

@@ -183,7 +183,7 @@ namespace Project2
             }
 
         }
-        // Обработка рестарта (вызывается при нажатии кнопки в GameView)
+      
         public void RestartGame()
         {
             // Сброс состояния

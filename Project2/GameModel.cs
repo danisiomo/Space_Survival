@@ -210,11 +210,22 @@ namespace Project2
         public enum GameLevel { Easy, Hard }
         public GameLevel CurrentLevel { get; set; } = GameLevel.Easy;
         public bool IsVictory { get; set; } // Флаг победы
-        public int VictoryScore { get; } = 10; // Очков для перехода
+        public int VictoryScore { get; } = 100; // Очков для перехода
 
         public float PirateShootCooldown { get; set; } = 2f; // Значение по умолчанию
         public float LevelTime { get; set; } // Время прохождения текущего уровня
 
+        public Texture2D EasyBackground { get; set; }
+        public Texture2D HardBackground { get; set; }
 
+        public Texture2D CurrentBackground
+        {
+            get => CurrentLevel == GameLevel.Easy ? EasyBackground : HardBackground;
+        }
+
+        public Color PirateBulletColor
+        {
+            get => CurrentLevel == GameLevel.Easy ? Color.Red : Color.Blue;
+        }
     }
 }
