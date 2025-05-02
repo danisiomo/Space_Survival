@@ -91,7 +91,8 @@ namespace Project2
     }
 
     public class GameModel
-    {
+    {   
+
         public bool IsGameOver { get; set; } // Флаг завершения игры
         // Корабль
         private Vector2 _shipPosition;
@@ -205,5 +206,15 @@ namespace Project2
                 catch { /* Игнорируем ошибки записи */ }
             }
         }
+
+        public enum GameLevel { Easy, Hard }
+        public GameLevel CurrentLevel { get; set; } = GameLevel.Easy;
+        public bool IsVictory { get; set; } // Флаг победы
+        public int VictoryScore { get; } = 10; // Очков для перехода
+
+        public float PirateShootCooldown { get; set; } = 2f; // Значение по умолчанию
+        public float LevelTime { get; set; } // Время прохождения текущего уровня
+
+
     }
 }

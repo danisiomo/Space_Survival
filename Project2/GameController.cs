@@ -10,10 +10,10 @@ namespace Project2
     {
         private readonly GameModel _model;
         private float _timeSinceLastAsteroid;
-        private const float AsteroidSpawnTime = 2f;
+        private float AsteroidSpawnTime = 2f;
         private float _timeSinceLastFuelSpawn;
         private const float FuelSpawnTime = 10f;
-        private bool _wasSpacePressed;
+        private bool _wasSpacePressed;  
 
         public GameController(GameModel model)
         {
@@ -101,6 +101,20 @@ namespace Project2
 
         public void Update(GameTime gameTime)
         {
+            // Проверка победы 
+            if (_model.Score >= _model.VictoryScore && !_model.IsVictory)
+            {
+                _model.IsVictory = true;
+                _model.IsPaused = true;
+                _model.SurvivalTime = _model.LevelTime; // Сохраняем время прохождения
+                //return; // Останавливаем игровую логику
+            }
+
+            if (!_model.IsPaused && !_model.IsGameOver && !_model.IsVictory)
+            {
+                _model.LevelTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
             var keyboardState = Keyboard.GetState();
             var mouseState = Mouse.GetState();
 
@@ -196,6 +210,22 @@ namespace Project2
              
             // Очищаем все сердца на карте
             _model.HeartsPickups.Clear();
+
+            // Очищаем все объекты
+            _model.Asteroids.Clear();
+            _model.Pirates.Clear();
+            _model.FuelCans.Clear();
+            _model.HeartsPickups.Clear();
+
+            // Сбрасываем таймеры
+            _timeSinceLastAsteroid = 0;
+            _pirateSpawnTimer = 0;
+            _timeSinceLastFuelSpawn = 0;
+            _model.TimeSinceLastHeartSpawn = 0;
+
+            _model.LevelTime = 0f;
+            // Применяем текущие настройки уровня
+            ApplyLevelSettings();
         }
 
         private void UpdateShip(KeyboardState keyboardState)
@@ -357,6 +387,48 @@ namespace Project2
                     _model.HeartsPickups.Remove(heart);
                 }
             }
+        }
+
+        public void ApplyLevelSettings()
+        {
+            if (_model.CurrentLevel == GameModel.GameLevel.Easy)
+            {
+                AsteroidSpawnTime = 2f;
+                PirateSpawnInterval = 10f;
+                _model.PirateShootCooldown = 5f;
+            }
+            else // Hard
+            {
+                AsteroidSpawnTime = 1f;
+                PirateSpawnInterval = 1f;
+                _model.PirateShootCooldown = 0.1f;
+            }
+        }
+        public void FullRestart()
+        {
+            // Сброс всех игровых объектов
+            _model.Asteroids.Clear();
+            _model.Pirates.Clear();
+            _model.FuelCans.Clear();
+            _model.HeartsPickups.Clear();
+
+            // Сброс состояния
+            _model.IsGameOver = false;
+            _model.IsVictory = false;
+            _model.IsPaused = false;
+            _model.Score = 0;
+            _model.Fuel = 100f;
+            _model.Hearts = 3;
+            // Сбрасываем таймеры
+            _timeSinceLastAsteroid = 0;
+            _pirateSpawnTimer = 0;
+            _timeSinceLastFuelSpawn = 0;
+            _model.TimeSinceLastHeartSpawn = 0;
+
+            _model.LevelTime = 0f;
+            // Перезагрузка уровня
+            _model.ShipPosition = new Vector2(_model.ScreenWidth / 2f, _model.ScreenHeight / 2f);
+            ApplyLevelSettings(); // Важно для применения сложности
         }
     }
 }

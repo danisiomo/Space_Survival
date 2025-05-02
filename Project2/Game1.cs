@@ -46,7 +46,7 @@ namespace Project2
             //_model.AsteroidTexture = Content.Load<Texture2D>("asteroid");
             _model.FuelCanTexture = Content.Load<Texture2D>("fuelcan");
             _model.Font = Content.Load<SpriteFont>("font");
-            _view = new GameView(_model, _spriteBatch);
+            _view = new GameView(_model, _spriteBatch, _controller);
 
             //_model.PirateTexture = Content.Load<Texture2D>("piratik");
             _model.PirateBulletTexture = Content.Load<Texture2D>("pirate_bull");
@@ -77,7 +77,7 @@ namespace Project2
                 _model.StartScreenTexture.SetData(new[] { Color.Black });
             }
 
-            _view = new GameView(_model, _spriteBatch);
+            _view = new GameView(_model, _spriteBatch, _controller);
         }
 
         protected override void Update(GameTime gameTime)
@@ -88,6 +88,12 @@ namespace Project2
                 _model.IsGameOver = false;
                 _controller.RestartGame();
                 _model.TotalTime = 0f;
+            }
+            // Обработка рестарта на экране победы/поражения
+            if ((_model.IsGameOver || _model.IsVictory) && Keyboard.GetState().IsKeyDown(Keys.R))
+            {
+                _controller.FullRestart();
+                return;
             }
 
             // Выход по ESC при Game Over
@@ -100,6 +106,22 @@ namespace Project2
             {
                 _controller.Update(gameTime);
             }
+
+            // Обработка перехода между уровнями
+            if (_model.IsVictory)
+            {
+                var keyboardState = Keyboard.GetState();
+
+                if (keyboardState.IsKeyDown(Keys.M)) // В меню
+                {
+                    ExitToMenu();
+                }
+                else if (keyboardState.IsKeyDown(Keys.N)) // Следующий уровень
+                {
+                    NextLevel();
+                }
+                return;
+            }
             _view.Update(gameTime); ;
         }
 
@@ -108,6 +130,45 @@ namespace Project2
             GraphicsDevice.Clear(Color.Black);
             _view.Draw(gameTime); // Передаем gameTime в GameView
             base.Draw(gameTime);
+        }
+
+        // В Game1.cs
+        private void ExitToMenu()
+        {
+            // Сбрасываем на легкий уровень
+            _model.CurrentLevel = GameModel.GameLevel.Easy;
+
+            // Сбрасываем все игровые состояния
+            _model.IsGameStarted = false;
+            _model.IsVictory = false;
+            _model.IsGameOver = false;
+            _model.IsPaused = false;
+
+            // Сбрасываем игровые данные
+            _model.Score = 0;
+            _model.Fuel = 100f;
+            _model.Hearts = 3;
+
+            // Очищаем все объекты
+            _controller.RestartGame();
+
+            // Применяем настройки для легкого уровня
+            _controller.ApplyLevelSettings();
+        }
+
+        private void NextLevel()
+        {
+            _model.IsVictory = false;
+            _model.IsPaused = false;
+            _model.Score = 0; // Сбрасываем счёт
+
+            // Переключаем уровень
+            _model.CurrentLevel = _model.CurrentLevel == GameModel.GameLevel.Easy
+                ? GameModel.GameLevel.Hard
+                : GameModel.GameLevel.Easy;
+
+            _controller.RestartGame();
+            _controller.ApplyLevelSettings(); // Применяем новые настройки
         }
     }
 }
