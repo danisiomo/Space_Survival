@@ -237,17 +237,17 @@ namespace space_survival.Controller
 
         public void ApplyLevelSettings()
         {
-            if (_model.CurrentLevel == GameLevel.Easy)
+            if (_model.CurrentLevel == GameModel.GameLevel.Easy)
             {
-                AsteroidSpawnTime = 2f;
-                PirateSpawnInterval = 10f;
-                _model.PirateShootCooldown = 5f;
+                _model.CurrentAsteroidSpawnTime = _model.EasyAsteroidSpawnTime;
+                _model.CurrentPirateSpawnInterval = _model.EasyPirateSpawnInterval;
+                _model.PirateShootCooldown = 2f;
             }
-            else // Hard
+            else
             {
-                AsteroidSpawnTime = 1f;
-                PirateSpawnInterval = 1f;
-                _model.PirateShootCooldown = 0.1f;
+                _model.CurrentAsteroidSpawnTime = _model.HardAsteroidSpawnTime;
+                _model.CurrentPirateSpawnInterval = _model.HardPirateSpawnInterval;
+                _model.PirateShootCooldown = 1f;
             }
         }
         public void FullRestart()

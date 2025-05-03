@@ -22,13 +22,15 @@ namespace space_survival.Controller
         public UpdateController(GameModel model)
         {
             _model = model;
+            _timeSinceLastAsteroid = model.CurrentAsteroidSpawnTime; // Начинаем с полного интервала
+            _pirateSpawnTimer = model.CurrentPirateSpawnInterval; // Аналогично для пиратов
         }
 
         public void UpdatePirates(GameTime gameTime)
         {
             _pirateSpawnTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_pirateSpawnTimer >= PirateSpawnInterval ||
+            if (_pirateSpawnTimer >= _model.CurrentPirateSpawnInterval ||
                 _model.Pirates.Count == 0 && _pirateSpawnTimer >= 2f) // Первый пират через 2 сек
             {
                 _model.Pirates.Add(new Pirate
@@ -39,8 +41,10 @@ namespace space_survival.Controller
                 });
                 _pirateSpawnTimer = 0;
 
-                // Рандомный интервал (3-7 секунд)
-                PirateSpawnInterval = Random.Shared.Next(3, 8);
+                // Для Hard уровня делаем интервалы короче
+                _model.CurrentPirateSpawnInterval = _model.CurrentLevel == GameModel.GameLevel.Easy
+                    ? Random.Shared.Next(3, 8)
+                    : Random.Shared.Next(2, 5);
             }
 
             foreach (var pirate in _model.Pirates.ToList())
@@ -113,14 +117,19 @@ namespace space_survival.Controller
         }
         public void UpdateAsteroids(GameTime gameTime)
         {
+            if (_model.CurrentAsteroidSpawnTime <= 0) // Защита от нулевого интервала
+                _model.CurrentAsteroidSpawnTime = _model.EasyAsteroidSpawnTime;
+
             _timeSinceLastAsteroid += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_timeSinceLastAsteroid >= AsteroidSpawnTime)
+            if (_timeSinceLastAsteroid >= _model.CurrentAsteroidSpawnTime)
             {
                 _model.Asteroids.Add(new Asteroid
                 {
                     Position = new Vector2(_model.ScreenWidth, Random.Shared.Next(50, _model.ScreenHeight - 50)),
-                    Speed = Random.Shared.Next(1, 4),
+                    Speed = _model.CurrentLevel == GameModel.GameLevel.Easy
+                ? Random.Shared.Next(1, 4)
+                : Random.Shared.Next(2, 5), // На Hard уровне быстрее
                     Texture = _model.AsteroidTextures[Random.Shared.Next(_model.AsteroidTextures.Count)] // Выбор случайной текстуры
                 });
                 _timeSinceLastAsteroid = 0;

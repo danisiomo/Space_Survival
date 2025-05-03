@@ -7,7 +7,8 @@ using System.IO;
 namespace space_survival.Model
 {
     public class GameModel
-    {   
+    {       
+
         public bool IsGameOver { get; set; } // Флаг завершения игры
 
         // Корабль
@@ -94,6 +95,9 @@ namespace space_survival.Model
         public GameModel()
         {
             HighScore = LoadHighScore();
+            // Инициализация значений по умолчанию
+            CurrentAsteroidSpawnTime = EasyAsteroidSpawnTime;
+            CurrentPirateSpawnInterval = EasyPirateSpawnInterval;
         }
 
         // Загрузка рекорда
@@ -143,5 +147,17 @@ namespace space_survival.Model
         {
             get => CurrentLevel == GameLevel.Easy ? Color.Red : Color.Blue;
         }
+
+        // Добавляем настройки для уровней
+        public float EasyAsteroidSpawnTime { get; } = 2f;
+        public float HardAsteroidSpawnTime { get; } = 1f;
+        public float EasyPirateSpawnInterval { get; } = 5f;
+        public float HardPirateSpawnInterval { get; } = 3f;
+
+        // Текущие интервалы (обновляются при смене уровня)
+        public float CurrentAsteroidSpawnTime { get; set; }
+        public float CurrentPirateSpawnInterval { get; set; }
+
+
     }
 }
